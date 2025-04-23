@@ -12,4 +12,4 @@ const PlayerSchema = new mongoose.Schema(
   { timestamps: true, collections: 'players' },
 );
 
-export default mongoose.model('Player', PlayerSchema);
+export default PlayerSchema;

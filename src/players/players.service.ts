@@ -1,34 +1,36 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { createPlayerDto } from './dtos/create-player.dto';
 import { Player } from './interface/player.interface';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class PlayersService {
+
+    constructor(
+        @InjectModel('Player')
+        private readonly _playerModel: Model<Player>,
+    ){}
+
   async create(player: createPlayerDto): Promise<Player> {
-    return {
-      _id: '123456789',
-      phone: player.phone,
-      email: player.email,
-      name: player.name,
-      ranking: 'Gold',
-      rankingPosition: 1,
-      avatar: 'https://example.com/avatar.png',
-    };
+    await this.exists(player.email);
+
+    const newPlayer:Player = new this._playerModel(player);
+    await newPlayer.save();
+
+    return newPlayer;
   }
 
   async list(): Promise<Player[]> {
-    let player1: Player = {
-      _id: '987654321',
-      phone: '123-456-7890',
-      email: 'player2@example.com',
-      name: 'Player Two',
-      ranking: 'Silver',
-      rankingPosition: 2,
-      avatar: 'https://example.com/avatar2.png',
+    const players:Player[] = await this._playerModel.find({}).lean();
+    return players;
+  }
+
+  async exists(email: string): Promise<boolean> {
+    if(await this._playerModel.findOne({ email })){
+        throw new ConflictException('Email already exists');
     };
-    const array: Player[] = [];
-    array.push(player1);
-    array.push(player1);
-    return array;
+
+    return false
   }
 }
