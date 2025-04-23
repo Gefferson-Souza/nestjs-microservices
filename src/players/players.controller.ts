@@ -17,14 +17,13 @@ export class PlayersController {
   @ApiOperation({ summary: 'Criar um novo jogador' })
   @ApiResponse({
     status: 201,
-    description: 'Jogador criado com sucesso',
     type: createPlayerDto,
   })
-  @ApiResponse({ status: 400, description: 'Dados inválidos' })
+  @ApiResponse({ status: 409, description: 'Email already exists' })
   async create(
     @Body() player: createPlayerDto,
   ): Promise<Partial<createPlayerDto>> {
-    return { email: player.email };
+    return this._playersService.create(player);
   }
 
   @Get('')

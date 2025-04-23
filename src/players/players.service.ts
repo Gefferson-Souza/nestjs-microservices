@@ -33,4 +33,20 @@ export class PlayersService {
 
     return false
   }
+
+  async update(id: string, player: createPlayerDto): Promise<Player | null>  {
+    const updatedUser: Player | null = await this._playerModel.findByIdAndUpdate(
+      id,
+      player,
+      { new: true }).lean();
+    return updatedUser;
+  }
+
+  async updatePartial(id: string, player: Partial<createPlayerDto>): Promise<Player | null>  {
+    const updatedUser: Player | null = await this._playerModel.findByIdAndUpdate(
+      id,
+      player,
+      { new: true }).lean();
+    return updatedUser;
+  }
 }
