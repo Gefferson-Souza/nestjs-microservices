@@ -8,7 +8,7 @@ export class CreateCategoryDto {
 
   @IsString()
   @IsNotEmpty()
-  readonly descricao: string;
+  readonly description: string;
 
   @IsArray()
   @ArrayMinSize(1)

@@ -2,7 +2,7 @@ import { Player } from '../../players/interface/player.interface';
 
 export interface Category extends Document {
   readonly category: string;
-  descricao: string;
+  description: string;
   events: Array<Event>;
   players: Array<Player>;
 }

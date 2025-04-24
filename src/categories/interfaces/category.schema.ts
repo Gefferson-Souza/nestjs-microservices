@@ -2,6 +2,7 @@ import * as mongoose from 'mongoose';
 
 export const CategorySchema = new mongoose.Schema(
   {
+    category: { type: String, required: true },
     name: { type: String, required: true },
     description: { type: String, required: true },
     events: [
