@@ -27,6 +27,14 @@ export class PlayersService {
     return players;
   }
 
+  async getPlayer(id: string): Promise<Player | null> {
+    const player: Player | null = await this._playerModel.findById(id).lean();
+    if(!player){
+      throw new NotFoundException('Player not found');
+    };
+    return player;
+  }
+
   async emailExists(email: string): Promise<boolean> {
     if(await this._playerModel.findOne({ email })){
         throw new ConflictException('Email already exists');
