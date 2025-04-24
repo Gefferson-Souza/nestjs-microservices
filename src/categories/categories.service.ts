@@ -6,19 +6,18 @@ import { Model } from 'mongoose';
 
 @Injectable()
 export class CategoriesService {
+  constructor(
+    @InjectModel('Category')
+    private readonly _categoryModel: Model<Category>,
+  ) {}
 
-    constructor(
-        @InjectModel('Category')
-        private readonly _categoryModel: Model<Category>,
-    ){}
+  async create(category: CreateCategoryDto): Promise<Category> {
+    const newCategory = await this._categoryModel.create(category);
+    return newCategory;
+  }
 
-    async create(category: CreateCategoryDto): Promise<Category> {
-        const newCategory = await this._categoryModel.create(category);
-        return newCategory;
-    }
-
-    async list(): Promise<Category[] | null> {
-        const categories: Category[] = await this._categoryModel.find({});
-        return categories;
-    }
+  async list(): Promise<Category[] | null> {
+    const categories: Category[] = await this._categoryModel.find({});
+    return categories;
+  }
 }

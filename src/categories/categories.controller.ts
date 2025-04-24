@@ -13,9 +13,7 @@ import { Category } from './interfaces/category.interface';
 @UsePipes(ValidationPipe)
 @Controller('api/v1/categories')
 export class CategoriesController {
-  constructor(
-    private readonly _categoriesService: CategoriesService,
-  ) {} 
+  constructor(private readonly _categoriesService: CategoriesService) {}
 
   @Post('')
   @ApiOperation({ summary: 'Create new category' })
@@ -28,13 +26,13 @@ export class CategoriesController {
   }
 
   @Get('')
-    @ApiOperation({ summary: 'List all categories' })
-    @ApiResponse({
-      status: 200,
-      description: 'List categories',
-    })
-    @ApiResponse({ status: 400, description: 'Error on list categories' })
-    async list (): Promise<Category[] | null> {
-      return this._categoriesService.list();
-    }
+  @ApiOperation({ summary: 'List all categories' })
+  @ApiResponse({
+    status: 200,
+    description: 'List categories',
+  })
+  @ApiResponse({ status: 400, description: 'Error on list categories' })
+  async list(): Promise<Category[] | null> {
+    return this._categoriesService.list();
+  }
 }
