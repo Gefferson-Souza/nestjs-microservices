@@ -14,7 +14,7 @@ import { CreatePlayerDto } from './dtos/create-player.dto';
 import { PlayersService } from './players.service';
 import { Player } from './interface/player.interface';
 import { UpdatePutPlayerDto } from './dtos/update-put-player.dto';
-import { PlayersValidationParametersPipe } from './pipes/players-validation-parameters.pipe';
+import { ValidationParametersPipe } from '../common/pipes/validation-parameters/validation-parameters.pipe';
 import { PlayerDto } from './dtos/player.dto';
 
 @ApiTags('Players')
@@ -54,7 +54,7 @@ export class PlayersController {
   @ApiResponse({ status: 400, description: 'Error on get player' })
   @ApiResponse({ status: 404, description: 'Player not found' })
   async getPlayer(
-    @Param('id', PlayersValidationParametersPipe) id: string,
+    @Param('id', ValidationParametersPipe) id: string,
   ): Promise<Player | null> {
     return this._playersService.getPlayer(id);
   }
@@ -84,7 +84,7 @@ export class PlayersController {
   @ApiResponse({ status: 400, description: 'Error on delete player' })
   @ApiResponse({ status: 404, description: 'Player not found' })
   async delete(
-    @Param('id', PlayersValidationParametersPipe) id: string,
+    @Param('id', ValidationParametersPipe) id: string,
   ): Promise<Player | null> {
     return this._playersService.removePlayer(id);
   }
