@@ -1,11 +1,13 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { createPlayerDto } from './dtos/create-player.dto';
-import PlayeSchema  from './interface/player.schema';
+import { CreatePlayerDto } from './dtos/create-player.dto';
 import { PlayersService } from './players.service';
 import { Player } from './interface/player.interface';
+import { UpdatePutPlayerDto } from './dtos/update-put-player.dto';
+import { PlayersValidationParametersPipe } from './pipes/players-validation-parameters.pipe';
 
 @ApiTags('Players')
+// @UsePipes(ValidationPipe)
 @Controller('api/v1/players')
 export class PlayersController {
 
@@ -14,26 +16,55 @@ export class PlayersController {
   ){}
 
   @Post('')
-  @ApiOperation({ summary: 'Criar um novo jogador' })
+  @ApiOperation({ summary: 'Create new player' })
   @ApiResponse({
     status: 201,
-    type: createPlayerDto,
+    type: CreatePlayerDto,
   })
   @ApiResponse({ status: 409, description: 'Email already exists' })
   async create(
-    @Body() player: createPlayerDto,
-  ): Promise<Partial<createPlayerDto>> {
+    @Body() player: CreatePlayerDto,
+  ): Promise<Player | null> {
     return this._playersService.create(player);
   }
 
   @Get('')
-  @ApiOperation({ summary: 'Listar todos os jogadores' })
+  @ApiOperation({ summary: 'List all players' })
   @ApiResponse({
     status: 200,
-    description: 'Lista de jogadores',
+    description: 'List players',
   })
-  @ApiResponse({ status: 400, description: 'Erro ao listar jogadores' })
-  async list(): Promise<Player[]> {
+  @ApiResponse({ status: 400, description: 'Error on list players' })
+  async list(): Promise<Player[] | []> {
       return this._playersService.list();
+  }
+
+  @Put(':id')
+  @ApiOperation({ summary: 'Update player' })
+  @ApiResponse({
+    status: 200,
+    type: UpdatePutPlayerDto,
+  })
+  @ApiResponse({ status: 400, description: 'Error on update player' })
+  @ApiResponse({ status: 404, description: 'Player not found' })
+  async update(
+    @Body() player: UpdatePutPlayerDto,
+    @Param('id') id: string,
+  ): Promise<Player | null> {
+    return this._playersService.update(id, player);
+  }
+
+  @Delete(':id')
+  @ApiOperation({ summary: 'Delete player' })
+  @ApiResponse({
+    status: 200,
+    description: 'Player deleted',
+  })
+  @ApiResponse({ status: 400, description: 'Error on delete player' })
+  @ApiResponse({ status: 404, description: 'Player not found' })
+  async delete(
+    @Param('id', PlayersValidationParametersPipe) id: string,
+  ): Promise<Player | null> {
+    return this._playersService.removePlayer(id);
   }
 }
