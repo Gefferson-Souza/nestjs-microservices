@@ -1,4 +1,4 @@
-import { PlayersValidationParametersPipe } from "./players-validation-parameters.pipe";
+import { PlayersValidationParametersPipe } from './players-validation-parameters.pipe';
 
 describe('PlayersPipe', () => {
   it('should be defined', () => {

@@ -1,4 +1,14 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, UsePipes, ValidationPipe } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreatePlayerDto } from './dtos/create-player.dto';
 import { PlayersService } from './players.service';
@@ -11,10 +21,7 @@ import { PlayerDto } from './dtos/player.dto';
 @UsePipes(ValidationPipe)
 @Controller('api/v1/players')
 export class PlayersController {
-
-  constructor(
-    private readonly _playersService: PlayersService,
-  ){}
+  constructor(private readonly _playersService: PlayersService) {}
 
   @Post('')
   @ApiOperation({ summary: 'Create new player' })
@@ -23,9 +30,7 @@ export class PlayersController {
     type: CreatePlayerDto,
   })
   @ApiResponse({ status: 409, description: 'Email already exists' })
-  async create(
-    @Body() player: CreatePlayerDto,
-  ): Promise<Player | null> {
+  async create(@Body() player: CreatePlayerDto): Promise<Player | null> {
     return this._playersService.create(player);
   }
 
@@ -37,7 +42,7 @@ export class PlayersController {
   })
   @ApiResponse({ status: 400, description: 'Error on list players' })
   async list(): Promise<Player[] | []> {
-      return this._playersService.list();
+    return this._playersService.list();
   }
 
   @Get(':id')
@@ -53,7 +58,6 @@ export class PlayersController {
   ): Promise<Player | null> {
     return this._playersService.getPlayer(id);
   }
-  
 
   @Put(':id')
   @ApiOperation({ summary: 'Update player' })
@@ -75,7 +79,7 @@ export class PlayersController {
   @ApiResponse({
     status: 200,
     description: 'Player deleted',
-    type:PlayerDto,
+    type: PlayerDto,
   })
   @ApiResponse({ status: 400, description: 'Error on delete player' })
   @ApiResponse({ status: 404, description: 'Player not found' })
