@@ -2,11 +2,12 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
+  BadRequestException,
 } from '@nestjs/common';
 import { CreatePlayerDto } from './dtos/create-player.dto';
 import { Player } from './interface/player.interface';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, isValidObjectId } from 'mongoose';
 import { UpdatePutPlayerDto } from './dtos/update-put-player.dto';
 
 @Injectable()
@@ -31,6 +32,10 @@ export class PlayersService {
   }
 
   async getPlayer(id: string): Promise<Player | null> {
+    if (!id || !isValidObjectId(id)) {
+      throw new BadRequestException(`ID de jogador inválido: ${id}`);
+    }
+
     const player: Player | null = await this._playerModel.findById(id).lean();
     if (!player) {
       throw new NotFoundException('Player not found');
@@ -47,6 +52,10 @@ export class PlayersService {
   }
 
   async checkPlayerExists(_id: string): Promise<Boolean | NotFoundException> {
+    if (!_id || !isValidObjectId(_id)) {
+      throw new BadRequestException(`ID de jogador inválido: ${_id}`);
+    }
+
     const player: Player | null = await this._playerModel.findById(_id).lean();
     if (!player) {
       throw new NotFoundException('Player not found');
@@ -58,6 +67,10 @@ export class PlayersService {
     id: string,
     player: T,
   ): Promise<Player | null> {
+    if (!id || !isValidObjectId(id)) {
+      throw new BadRequestException(`ID de jogador inválido: ${id}`);
+    }
+
     await this.checkPlayerExists(id);
 
     if (player.email) {
@@ -81,6 +94,10 @@ export class PlayersService {
   }
 
   async removePlayer(id: string): Promise<Player | null> {
+    if (!id || !isValidObjectId(id)) {
+      throw new BadRequestException(`ID de jogador inválido: ${id}`);
+    }
+
     await this.checkPlayerExists(id);
 
     const deletedUser: Player | null = await this._playerModel

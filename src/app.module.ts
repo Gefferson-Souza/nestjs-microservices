@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CategoriesModule } from './categories/categories.module';
 import { ChallengeModule } from './challenge/challenge.module';
+import { MatchesModule } from './matches/matches.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { ChallengeModule } from './challenge/challenge.module';
     MongooseModule.forRoot(process.env.MONGODB_URI || ''),
     CategoriesModule,
     ChallengeModule,
+    MatchesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,5 +1,11 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsEmail, IsMongoId, IsNumber, IsString, MaxLength } from "class-validator";
+import { ApiProperty } from '@nestjs/swagger';
+import {
+  IsEmail,
+  IsMongoId,
+  IsNumber,
+  IsString,
+  MaxLength,
+} from 'class-validator';
 
 export class PlayerDto {
   @ApiProperty({
@@ -15,21 +21,21 @@ export class PlayerDto {
   })
   @IsString()
   readonly phone: string;
-  
+
   @ApiProperty({
     description: 'Email do jogador',
     example: 'test@gmail.com',
   })
   @IsEmail()
   readonly email: string;
-  
+
   @ApiProperty({
     description: 'Nome do jogador',
     example: 'João Silva',
   })
   @IsString()
   name: string;
-  
+
   @ApiProperty({
     description: 'Ranking do jogador',
     example: 'A',
@@ -44,7 +50,7 @@ export class PlayerDto {
   })
   @IsNumber()
   rankingPosition: number;
-  
+
   @ApiProperty({
     description: 'Avatar do jogador',
     example: 'https://example.com/avatar.jpg',

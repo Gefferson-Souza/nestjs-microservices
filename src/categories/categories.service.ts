@@ -1,8 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCategoryDto } from './dtos/create-category.dto';
 import { Category } from './interfaces/category.interface';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, isValidObjectId } from 'mongoose';
 import { PlayersService } from '../players/players.service';
 
 @Injectable()
@@ -14,7 +14,12 @@ export class CategoriesService {
   ) {}
 
   async create(category: CreateCategoryDto): Promise<Category> {
-    const newCategory = await this._categoryModel.create(category);
+    const categoryData = {
+      ...category,
+      players: category.players || [] // Garantir que players seja um array mesmo quando não fornecido
+    };
+    
+    const newCategory = await this._categoryModel.create(categoryData);
     return newCategory;
   }
 
@@ -28,6 +33,10 @@ export class CategoriesService {
   }
 
   async categoryExists(id: string): Promise<NotFoundException | Category> {
+    if (!id || !isValidObjectId(id)) {
+      throw new BadRequestException(`ID de categoria inválido: ${id}`);
+    }
+
     const category: Category | null = await this._categoryModel.findById(id);
 
     if (!category) {
@@ -64,5 +73,19 @@ export class CategoriesService {
       { $push: { players: playerId } },
       { new: true },
     );
+  }
+
+  async getCategoryByPlayer(playerId: string): Promise<Category | null> {
+    if (!playerId || !isValidObjectId(playerId)) {
+      throw new BadRequestException(`ID de jogador inválido: ${playerId}`);
+    }
+    
+    await this._playerSerice.checkPlayerExists(playerId);
+    
+    const category = await this._categoryModel.findOne({
+      players: { $in: [playerId] }
+    }).exec();
+    
+    return category;
   }
 }
