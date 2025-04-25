@@ -1,8 +1,9 @@
 import { Controller, Post } from "@nestjs/common";
 import { ChallengeService } from "./challenge.service";
 import { Challenge } from "./interfaces/challenge.interface";
-import { ApiOperation, ApiResponse } from "@nestjs/swagger";
+import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 
+@ApiTags('Challenges')
 @Controller('api/v1/challenges')
 export class ChallengeController{
     constructor(
